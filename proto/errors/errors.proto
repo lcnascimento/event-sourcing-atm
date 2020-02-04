@@ -1,0 +1,25 @@
+syntax = "proto3";
+package errors;
+
+enum ErrorKind {
+  KIND_NOT_GIVEN = 0;
+  BAD_REQUEST = 400;
+  UNAUTHORIZED = 401;
+  NOT_FOUND = 404;
+  UNEXPECTED = 500;
+}
+
+enum ErrorSeverity {
+  SEVERITY_NOT_GIVEN = 0;
+  INFO = 1;
+  WARNING = 2;
+  ERROR = 3;
+  CRITICAL = 4;
+}
+
+message Error {
+  string message = 1;
+  ErrorKind kind = 2;
+  ErrorSeverity severity = 3;
+  repeated string trace = 4;
+}
