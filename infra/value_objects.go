@@ -122,3 +122,6 @@ const (
 	// ReferenceContextValueKey ...
 	ReferenceContextValueKey string = "reference"
 )
+
+// EventStreamTopic ...
+type EventStreamTopic string

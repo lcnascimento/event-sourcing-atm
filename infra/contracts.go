@@ -22,3 +22,12 @@ type LogProvider interface {
 	Debugf(context.Context, OpName, string, ...interface{})
 	DebugCustomData(context.Context, OpName, string, CustomData)
 }
+
+// EventStreamPublisher ...
+type EventStreamPublisher interface {
+	Publish(context.Context, EventStreamTopic, []byte) *Error
+}
+
+// EventStreamSubscriber ...
+type EventStreamSubscriber interface {
+}

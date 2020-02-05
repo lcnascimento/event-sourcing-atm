@@ -73,6 +73,10 @@ message CreateAccountResponse {
   Error error = 2;
 }
 
+message AccountCreated {
+  Account account = 1;
+}
+
 message DeleteAccountRequest {
   string account_id = 2;
 }

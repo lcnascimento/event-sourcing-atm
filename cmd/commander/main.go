@@ -5,6 +5,7 @@ import (
 
 	"github.com/lcnascimento/event-sourcing-atm/infra"
 	"github.com/lcnascimento/event-sourcing-atm/infra/errors"
+	"github.com/lcnascimento/event-sourcing-atm/infra/kafka"
 	"github.com/lcnascimento/event-sourcing-atm/infra/log"
 
 	account "github.com/lcnascimento/event-sourcing-atm/domain/command/account"
@@ -21,6 +22,19 @@ func main() {
 		Level: "Info",
 		GoEnv: "development",
 	})
+
+	kafka, err := kafka.NewService(kafka.ServiceInput{
+		Log: log,
+		Hosts: []string{
+			"localhost:9092",
+			"localhost:9093",
+			"localhost:9094",
+		},
+	})
+	if err != nil {
+		errors.Log(log, err)
+		return
+	}
 
 	account, err := account.NewService(account.ServiceInput{
 		Log: log,
@@ -39,6 +53,7 @@ func main() {
 	}
 
 	server, err := server.NewService(server.ServiceInput{
+		Stream:       kafka,
 		Accounts:     account,
 		Transactions: transaction,
 	})

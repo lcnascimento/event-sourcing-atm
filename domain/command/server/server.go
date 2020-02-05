@@ -6,6 +6,7 @@ import (
 
 	"google.golang.org/grpc"
 
+	"github.com/golang/protobuf/proto"
 	pb "github.com/lcnascimento/event-sourcing-atm/proto/impl"
 
 	"github.com/lcnascimento/event-sourcing-atm/infra"
@@ -17,6 +18,8 @@ import (
 
 // ServiceInput ...
 type ServiceInput struct {
+	Stream infra.EventStreamPublisher
+
 	Accounts     command.AccountsProvider
 	Transactions command.TransactionsProvider
 }
@@ -36,7 +39,27 @@ func (s Service) CreateAccountCommand(ctx context.Context, req *pb.CreateAccount
 	const opName infra.OpName = "command.server.Create"
 
 	if err := s.in.Accounts.Insert(ctx, domain.Account{}); err != nil {
-		return &pb.CreateAccountResponse{}, errors.New(opName, err)
+		return &pb.CreateAccountResponse{Error: errors.ToProtoError(err)}, errors.New(opName, err)
+	}
+
+	accEncoded, err := proto.Marshal(&pb.Account{
+		Id:       "123",
+		Password: "321",
+		Owner: &pb.User{
+			Id:    "789",
+			Name:  "Luís Nascimento",
+			Cpf:   "123.456.789-10",
+			Email: "contact@lcnascimento.me",
+		},
+	})
+	if err != nil {
+		return &pb.CreateAccountResponse{
+			Error: errors.ToProtoError(errors.New(ctx, opName, err)),
+		}, errors.New(opName, err)
+	}
+
+	if err := s.in.Stream.Publish(ctx, "accounts", accEncoded); err != nil {
+		return &pb.CreateAccountResponse{Error: errors.ToProtoError(err)}, errors.New(opName, err)
 	}
 
 	return &pb.CreateAccountResponse{}, nil
