@@ -1,10 +1,40 @@
 syntax = "proto3";
-package accounts;
+package proto;
 
 import "google/protobuf/timestamp.proto";
 
-// import "users/users.proto";
-// import "errors/errors.proto";
+enum ErrorKind {
+  KIND_NOT_GIVEN = 0;
+  BAD_REQUEST = 400;
+  UNAUTHORIZED = 401;
+  NOT_FOUND = 404;
+  UNEXPECTED = 500;
+}
+
+enum ErrorSeverity {
+  SEVERITY_NOT_GIVEN = 0;
+  INFO = 1;
+  WARNING = 2;
+  ERROR = 3;
+  CRITICAL = 4;
+}
+
+message Error {
+  string message = 1;
+  ErrorKind kind = 2;
+  ErrorSeverity severity = 3;
+  repeated string trace = 4;
+}
+
+message User {
+  string id = 1;
+  string name = 2;
+  string cpf = 3;
+  string email = 4;
+  google.protobuf.Timestamp birthdate = 5;
+
+  google.protobuf.Timestamp created_at = 15;
+}
 
 enum TransactionType {
   DEPOSIT = 0;
@@ -27,7 +57,7 @@ message Transaction {
 message Account {
   string id = 1;
   string password = 2;
-  // users.User owner = 3;
+  User owner = 3;
   float balance = 4;
   repeated Transaction last_transactions = 5;
 
@@ -35,12 +65,12 @@ message Account {
 }
 
 message CreateAccountRequest {
-  // users.User user = 2;
+  User user = 2;
 }
 
 message CreateAccountResponse {
   Account account = 1;
-  // errors.Error error = 2;
+  Error error = 2;
 }
 
 message DeleteAccountRequest {
@@ -48,7 +78,7 @@ message DeleteAccountRequest {
 }
 
 message DeleteAccountResponse {
-  // errors.Error error = 1;
+  Error error = 1;
 }
 
 message DepositRequest {
@@ -57,7 +87,7 @@ message DepositRequest {
 }
 
 message DepositResponse {
-  // errors.Error error = 1;
+  Error error = 1;
 }
 
 message WithdrawRequest {
@@ -66,7 +96,7 @@ message WithdrawRequest {
 }
 
 message WithdrawResponse {
-  // errors.Error error = 1;
+  Error error = 1;
 }
 
 message TransferRequest {
@@ -76,7 +106,7 @@ message TransferRequest {
 }
 
 message TranseResponse {
-  // errors.Error error = 1;
+  Error error = 1;
 }
 
 message LoanRequest {
@@ -85,7 +115,7 @@ message LoanRequest {
 }
 
 message LoanResponse {
-  // errors.Error error = 1;
+  Error error = 1;
 }
 
 service AccountsCommandService {
@@ -104,7 +134,7 @@ message ListAccountsRequest {
 
 message ListAccountsResponse {
   repeated Account accounts = 1;
-  // errors.Error error = 2;
+  Error error = 2;
 }
 
 message FindAccountRequest {
@@ -113,7 +143,7 @@ message FindAccountRequest {
 
 message FindAccountResponse {
   Account account = 1;
-  // errors.Error error = 2;
+  Error error = 2;
 }
 
 service AccountsQueryService {

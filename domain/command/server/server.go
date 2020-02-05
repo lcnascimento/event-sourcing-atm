@@ -6,7 +6,7 @@ import (
 
 	"google.golang.org/grpc"
 
-	pb "github.com/lcnascimento/event-sourcing-atm/proto/accounts"
+	pb "github.com/lcnascimento/event-sourcing-atm/proto/impl"
 
 	"github.com/lcnascimento/event-sourcing-atm/infra"
 	"github.com/lcnascimento/event-sourcing-atm/infra/errors"

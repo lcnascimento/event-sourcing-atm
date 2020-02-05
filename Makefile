@@ -27,9 +27,7 @@ protofiles:
 	@ echo
 	@ echo "Compiling proto files..."
 	@ echo
-	@ protoc -I=proto --go_out=plugins=grpc:proto/ proto/accounts/accounts.proto && \
-		protoc -I=proto --go_out=plugins=grpc:proto/ proto/errors/errors.proto && \
-		protoc -I=proto --go_out=plugins=grpc:proto/ proto/users/users.proto
+	@ protoc -I=proto --go_out=plugins=grpc:proto/impl proto/pb.proto
 
 commander:
 	@ echo

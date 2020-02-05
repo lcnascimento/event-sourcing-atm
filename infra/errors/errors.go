@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/lcnascimento/event-sourcing-atm/proto/errors"
+	pb "github.com/lcnascimento/event-sourcing-atm/proto/impl"
 
 	"github.com/lcnascimento/event-sourcing-atm/infra"
 )
@@ -140,9 +140,9 @@ func Log(log infra.LogProvider, err *infra.Error) {
 }
 
 // ToProtoError ...
-func ToProtoError(err *infra.Error) *errors.Error {
-	return &errors.Error{
+func ToProtoError(err *infra.Error) *pb.Error {
+	return &pb.Error{
 		Message: Error(err).Error(),
-		Kind:    errors.ErrorKind(Kind(err)),
+		Kind:    pb	.ErrorKind(Kind(err)),
 	}
 }
