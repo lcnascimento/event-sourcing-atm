@@ -31,6 +31,12 @@ protofiles:
 		protoc -I=proto --go_out=plugins=grpc:proto/ proto/errors/errors.proto && \
 		protoc -I=proto --go_out=plugins=grpc:proto/ proto/users/users.proto
 
+commander:
+	@ echo
+	@ echo "Running commander..."
+	@ echo
+	@ go run ./cmd/commander
+
 producer:
 	@ echo
 	@ echo "Running producer..."

@@ -5,7 +5,6 @@ package accounts
 
 import (
 	context "context"
-	errors "errors"
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
 	timestamp "github.com/golang/protobuf/ptypes/timestamp"
@@ -13,7 +12,6 @@ import (
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
 	math "math"
-	users "users"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -141,9 +139,9 @@ func (m *Transaction) GetCreatedAt() *timestamp.Timestamp {
 }
 
 type Account struct {
-	Id                   string               `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Password             string               `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
-	Owner                *users.User          `protobuf:"bytes,3,opt,name=owner,proto3" json:"owner,omitempty"`
+	Id       string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+	// users.User owner = 3;
 	Balance              float32              `protobuf:"fixed32,4,opt,name=balance,proto3" json:"balance,omitempty"`
 	LastTransactions     []*Transaction       `protobuf:"bytes,5,rep,name=last_transactions,json=lastTransactions,proto3" json:"last_transactions,omitempty"`
 	CreatedAt            *timestamp.Timestamp `protobuf:"bytes,15,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
@@ -191,13 +189,6 @@ func (m *Account) GetPassword() string {
 	return ""
 }
 
-func (m *Account) GetOwner() *users.User {
-	if m != nil {
-		return m.Owner
-	}
-	return nil
-}
-
 func (m *Account) GetBalance() float32 {
 	if m != nil {
 		return m.Balance
@@ -219,57 +210,17 @@ func (m *Account) GetCreatedAt() *timestamp.Timestamp {
 	return nil
 }
 
-type ErrorResponse struct {
-	Error                *errors.Error `protobuf:"bytes,1,opt,name=error,proto3" json:"error,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
-	XXX_unrecognized     []byte        `json:"-"`
-	XXX_sizecache        int32         `json:"-"`
-}
-
-func (m *ErrorResponse) Reset()         { *m = ErrorResponse{} }
-func (m *ErrorResponse) String() string { return proto.CompactTextString(m) }
-func (*ErrorResponse) ProtoMessage()    {}
-func (*ErrorResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_5da251b36fd5e693, []int{2}
-}
-
-func (m *ErrorResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ErrorResponse.Unmarshal(m, b)
-}
-func (m *ErrorResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ErrorResponse.Marshal(b, m, deterministic)
-}
-func (m *ErrorResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ErrorResponse.Merge(m, src)
-}
-func (m *ErrorResponse) XXX_Size() int {
-	return xxx_messageInfo_ErrorResponse.Size(m)
-}
-func (m *ErrorResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_ErrorResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ErrorResponse proto.InternalMessageInfo
-
-func (m *ErrorResponse) GetError() *errors.Error {
-	if m != nil {
-		return m.Error
-	}
-	return nil
-}
-
 type CreateAccountRequest struct {
-	User                 *users.User `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
-	XXX_unrecognized     []byte      `json:"-"`
-	XXX_sizecache        int32       `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *CreateAccountRequest) Reset()         { *m = CreateAccountRequest{} }
 func (m *CreateAccountRequest) String() string { return proto.CompactTextString(m) }
 func (*CreateAccountRequest) ProtoMessage()    {}
 func (*CreateAccountRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_5da251b36fd5e693, []int{3}
+	return fileDescriptor_5da251b36fd5e693, []int{2}
 }
 
 func (m *CreateAccountRequest) XXX_Unmarshal(b []byte) error {
@@ -290,26 +241,18 @@ func (m *CreateAccountRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_CreateAccountRequest proto.InternalMessageInfo
 
-func (m *CreateAccountRequest) GetUser() *users.User {
-	if m != nil {
-		return m.User
-	}
-	return nil
-}
-
 type CreateAccountResponse struct {
-	Account              *Account      `protobuf:"bytes,1,opt,name=account,proto3" json:"account,omitempty"`
-	Error                *errors.Error `protobuf:"bytes,2,opt,name=error,proto3" json:"error,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
-	XXX_unrecognized     []byte        `json:"-"`
-	XXX_sizecache        int32         `json:"-"`
+	Account              *Account `protobuf:"bytes,1,opt,name=account,proto3" json:"account,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *CreateAccountResponse) Reset()         { *m = CreateAccountResponse{} }
 func (m *CreateAccountResponse) String() string { return proto.CompactTextString(m) }
 func (*CreateAccountResponse) ProtoMessage()    {}
 func (*CreateAccountResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_5da251b36fd5e693, []int{4}
+	return fileDescriptor_5da251b36fd5e693, []int{3}
 }
 
 func (m *CreateAccountResponse) XXX_Unmarshal(b []byte) error {
@@ -337,13 +280,6 @@ func (m *CreateAccountResponse) GetAccount() *Account {
 	return nil
 }
 
-func (m *CreateAccountResponse) GetError() *errors.Error {
-	if m != nil {
-		return m.Error
-	}
-	return nil
-}
-
 type DeleteAccountRequest struct {
 	AccountId            string   `protobuf:"bytes,2,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -355,7 +291,7 @@ func (m *DeleteAccountRequest) Reset()         { *m = DeleteAccountRequest{} }
 func (m *DeleteAccountRequest) String() string { return proto.CompactTextString(m) }
 func (*DeleteAccountRequest) ProtoMessage()    {}
 func (*DeleteAccountRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_5da251b36fd5e693, []int{5}
+	return fileDescriptor_5da251b36fd5e693, []int{4}
 }
 
 func (m *DeleteAccountRequest) XXX_Unmarshal(b []byte) error {
@@ -382,6 +318,37 @@ func (m *DeleteAccountRequest) GetAccountId() string {
 	}
 	return ""
 }
+
+type DeleteAccountResponse struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DeleteAccountResponse) Reset()         { *m = DeleteAccountResponse{} }
+func (m *DeleteAccountResponse) String() string { return proto.CompactTextString(m) }
+func (*DeleteAccountResponse) ProtoMessage()    {}
+func (*DeleteAccountResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_5da251b36fd5e693, []int{5}
+}
+
+func (m *DeleteAccountResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteAccountResponse.Unmarshal(m, b)
+}
+func (m *DeleteAccountResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteAccountResponse.Marshal(b, m, deterministic)
+}
+func (m *DeleteAccountResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteAccountResponse.Merge(m, src)
+}
+func (m *DeleteAccountResponse) XXX_Size() int {
+	return xxx_messageInfo_DeleteAccountResponse.Size(m)
+}
+func (m *DeleteAccountResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteAccountResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteAccountResponse proto.InternalMessageInfo
 
 type DepositRequest struct {
 	AccountId            string   `protobuf:"bytes,2,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
@@ -430,6 +397,37 @@ func (m *DepositRequest) GetAmount() float32 {
 	return 0
 }
 
+type DepositResponse struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DepositResponse) Reset()         { *m = DepositResponse{} }
+func (m *DepositResponse) String() string { return proto.CompactTextString(m) }
+func (*DepositResponse) ProtoMessage()    {}
+func (*DepositResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_5da251b36fd5e693, []int{7}
+}
+
+func (m *DepositResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DepositResponse.Unmarshal(m, b)
+}
+func (m *DepositResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DepositResponse.Marshal(b, m, deterministic)
+}
+func (m *DepositResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DepositResponse.Merge(m, src)
+}
+func (m *DepositResponse) XXX_Size() int {
+	return xxx_messageInfo_DepositResponse.Size(m)
+}
+func (m *DepositResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_DepositResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DepositResponse proto.InternalMessageInfo
+
 type WithdrawRequest struct {
 	AccountId            string   `protobuf:"bytes,2,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
 	Amount               float32  `protobuf:"fixed32,3,opt,name=amount,proto3" json:"amount,omitempty"`
@@ -442,7 +440,7 @@ func (m *WithdrawRequest) Reset()         { *m = WithdrawRequest{} }
 func (m *WithdrawRequest) String() string { return proto.CompactTextString(m) }
 func (*WithdrawRequest) ProtoMessage()    {}
 func (*WithdrawRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_5da251b36fd5e693, []int{7}
+	return fileDescriptor_5da251b36fd5e693, []int{8}
 }
 
 func (m *WithdrawRequest) XXX_Unmarshal(b []byte) error {
@@ -477,6 +475,37 @@ func (m *WithdrawRequest) GetAmount() float32 {
 	return 0
 }
 
+type WithdrawResponse struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *WithdrawResponse) Reset()         { *m = WithdrawResponse{} }
+func (m *WithdrawResponse) String() string { return proto.CompactTextString(m) }
+func (*WithdrawResponse) ProtoMessage()    {}
+func (*WithdrawResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_5da251b36fd5e693, []int{9}
+}
+
+func (m *WithdrawResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_WithdrawResponse.Unmarshal(m, b)
+}
+func (m *WithdrawResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_WithdrawResponse.Marshal(b, m, deterministic)
+}
+func (m *WithdrawResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_WithdrawResponse.Merge(m, src)
+}
+func (m *WithdrawResponse) XXX_Size() int {
+	return xxx_messageInfo_WithdrawResponse.Size(m)
+}
+func (m *WithdrawResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_WithdrawResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_WithdrawResponse proto.InternalMessageInfo
+
 type TransferRequest struct {
 	SourceAccountId      string   `protobuf:"bytes,2,opt,name=source_account_id,json=sourceAccountId,proto3" json:"source_account_id,omitempty"`
 	DeliveryAccountId    string   `protobuf:"bytes,3,opt,name=delivery_account_id,json=deliveryAccountId,proto3" json:"delivery_account_id,omitempty"`
@@ -490,7 +519,7 @@ func (m *TransferRequest) Reset()         { *m = TransferRequest{} }
 func (m *TransferRequest) String() string { return proto.CompactTextString(m) }
 func (*TransferRequest) ProtoMessage()    {}
 func (*TransferRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_5da251b36fd5e693, []int{8}
+	return fileDescriptor_5da251b36fd5e693, []int{10}
 }
 
 func (m *TransferRequest) XXX_Unmarshal(b []byte) error {
@@ -532,6 +561,37 @@ func (m *TransferRequest) GetAmount() float32 {
 	return 0
 }
 
+type TranseResponse struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *TranseResponse) Reset()         { *m = TranseResponse{} }
+func (m *TranseResponse) String() string { return proto.CompactTextString(m) }
+func (*TranseResponse) ProtoMessage()    {}
+func (*TranseResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_5da251b36fd5e693, []int{11}
+}
+
+func (m *TranseResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_TranseResponse.Unmarshal(m, b)
+}
+func (m *TranseResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_TranseResponse.Marshal(b, m, deterministic)
+}
+func (m *TranseResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TranseResponse.Merge(m, src)
+}
+func (m *TranseResponse) XXX_Size() int {
+	return xxx_messageInfo_TranseResponse.Size(m)
+}
+func (m *TranseResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_TranseResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TranseResponse proto.InternalMessageInfo
+
 type LoanRequest struct {
 	AccountId            string   `protobuf:"bytes,2,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
 	Amount               float32  `protobuf:"fixed32,3,opt,name=amount,proto3" json:"amount,omitempty"`
@@ -544,7 +604,7 @@ func (m *LoanRequest) Reset()         { *m = LoanRequest{} }
 func (m *LoanRequest) String() string { return proto.CompactTextString(m) }
 func (*LoanRequest) ProtoMessage()    {}
 func (*LoanRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_5da251b36fd5e693, []int{9}
+	return fileDescriptor_5da251b36fd5e693, []int{12}
 }
 
 func (m *LoanRequest) XXX_Unmarshal(b []byte) error {
@@ -579,6 +639,37 @@ func (m *LoanRequest) GetAmount() float32 {
 	return 0
 }
 
+type LoanResponse struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *LoanResponse) Reset()         { *m = LoanResponse{} }
+func (m *LoanResponse) String() string { return proto.CompactTextString(m) }
+func (*LoanResponse) ProtoMessage()    {}
+func (*LoanResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_5da251b36fd5e693, []int{13}
+}
+
+func (m *LoanResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_LoanResponse.Unmarshal(m, b)
+}
+func (m *LoanResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_LoanResponse.Marshal(b, m, deterministic)
+}
+func (m *LoanResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_LoanResponse.Merge(m, src)
+}
+func (m *LoanResponse) XXX_Size() int {
+	return xxx_messageInfo_LoanResponse.Size(m)
+}
+func (m *LoanResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_LoanResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_LoanResponse proto.InternalMessageInfo
+
 type ListAccountsRequest struct {
 	Page                 int32    `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
 	PageCount            int32    `protobuf:"varint,2,opt,name=page_count,json=pageCount,proto3" json:"page_count,omitempty"`
@@ -591,7 +682,7 @@ func (m *ListAccountsRequest) Reset()         { *m = ListAccountsRequest{} }
 func (m *ListAccountsRequest) String() string { return proto.CompactTextString(m) }
 func (*ListAccountsRequest) ProtoMessage()    {}
 func (*ListAccountsRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_5da251b36fd5e693, []int{10}
+	return fileDescriptor_5da251b36fd5e693, []int{14}
 }
 
 func (m *ListAccountsRequest) XXX_Unmarshal(b []byte) error {
@@ -627,18 +718,17 @@ func (m *ListAccountsRequest) GetPageCount() int32 {
 }
 
 type ListAccountsResponse struct {
-	Accounts             []*Account    `protobuf:"bytes,1,rep,name=accounts,proto3" json:"accounts,omitempty"`
-	Error                *errors.Error `protobuf:"bytes,2,opt,name=error,proto3" json:"error,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
-	XXX_unrecognized     []byte        `json:"-"`
-	XXX_sizecache        int32         `json:"-"`
+	Accounts             []*Account `protobuf:"bytes,1,rep,name=accounts,proto3" json:"accounts,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
+	XXX_unrecognized     []byte     `json:"-"`
+	XXX_sizecache        int32      `json:"-"`
 }
 
 func (m *ListAccountsResponse) Reset()         { *m = ListAccountsResponse{} }
 func (m *ListAccountsResponse) String() string { return proto.CompactTextString(m) }
 func (*ListAccountsResponse) ProtoMessage()    {}
 func (*ListAccountsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_5da251b36fd5e693, []int{11}
+	return fileDescriptor_5da251b36fd5e693, []int{15}
 }
 
 func (m *ListAccountsResponse) XXX_Unmarshal(b []byte) error {
@@ -666,13 +756,6 @@ func (m *ListAccountsResponse) GetAccounts() []*Account {
 	return nil
 }
 
-func (m *ListAccountsResponse) GetError() *errors.Error {
-	if m != nil {
-		return m.Error
-	}
-	return nil
-}
-
 type FindAccountRequest struct {
 	AccountId            string   `protobuf:"bytes,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -684,7 +767,7 @@ func (m *FindAccountRequest) Reset()         { *m = FindAccountRequest{} }
 func (m *FindAccountRequest) String() string { return proto.CompactTextString(m) }
 func (*FindAccountRequest) ProtoMessage()    {}
 func (*FindAccountRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_5da251b36fd5e693, []int{12}
+	return fileDescriptor_5da251b36fd5e693, []int{16}
 }
 
 func (m *FindAccountRequest) XXX_Unmarshal(b []byte) error {
@@ -713,18 +796,17 @@ func (m *FindAccountRequest) GetAccountId() string {
 }
 
 type FindAccountResponse struct {
-	Account              *Account      `protobuf:"bytes,1,opt,name=account,proto3" json:"account,omitempty"`
-	Error                *errors.Error `protobuf:"bytes,2,opt,name=error,proto3" json:"error,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
-	XXX_unrecognized     []byte        `json:"-"`
-	XXX_sizecache        int32         `json:"-"`
+	Account              *Account `protobuf:"bytes,1,opt,name=account,proto3" json:"account,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *FindAccountResponse) Reset()         { *m = FindAccountResponse{} }
 func (m *FindAccountResponse) String() string { return proto.CompactTextString(m) }
 func (*FindAccountResponse) ProtoMessage()    {}
 func (*FindAccountResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_5da251b36fd5e693, []int{13}
+	return fileDescriptor_5da251b36fd5e693, []int{17}
 }
 
 func (m *FindAccountResponse) XXX_Unmarshal(b []byte) error {
@@ -752,25 +834,22 @@ func (m *FindAccountResponse) GetAccount() *Account {
 	return nil
 }
 
-func (m *FindAccountResponse) GetError() *errors.Error {
-	if m != nil {
-		return m.Error
-	}
-	return nil
-}
-
 func init() {
 	proto.RegisterEnum("accounts.TransactionType", TransactionType_name, TransactionType_value)
 	proto.RegisterType((*Transaction)(nil), "accounts.Transaction")
 	proto.RegisterType((*Account)(nil), "accounts.Account")
-	proto.RegisterType((*ErrorResponse)(nil), "accounts.ErrorResponse")
 	proto.RegisterType((*CreateAccountRequest)(nil), "accounts.CreateAccountRequest")
 	proto.RegisterType((*CreateAccountResponse)(nil), "accounts.CreateAccountResponse")
 	proto.RegisterType((*DeleteAccountRequest)(nil), "accounts.DeleteAccountRequest")
+	proto.RegisterType((*DeleteAccountResponse)(nil), "accounts.DeleteAccountResponse")
 	proto.RegisterType((*DepositRequest)(nil), "accounts.DepositRequest")
+	proto.RegisterType((*DepositResponse)(nil), "accounts.DepositResponse")
 	proto.RegisterType((*WithdrawRequest)(nil), "accounts.WithdrawRequest")
+	proto.RegisterType((*WithdrawResponse)(nil), "accounts.WithdrawResponse")
 	proto.RegisterType((*TransferRequest)(nil), "accounts.TransferRequest")
+	proto.RegisterType((*TranseResponse)(nil), "accounts.TranseResponse")
 	proto.RegisterType((*LoanRequest)(nil), "accounts.LoanRequest")
+	proto.RegisterType((*LoanResponse)(nil), "accounts.LoanResponse")
 	proto.RegisterType((*ListAccountsRequest)(nil), "accounts.ListAccountsRequest")
 	proto.RegisterType((*ListAccountsResponse)(nil), "accounts.ListAccountsResponse")
 	proto.RegisterType((*FindAccountRequest)(nil), "accounts.FindAccountRequest")
@@ -780,59 +859,56 @@ func init() {
 func init() { proto.RegisterFile("accounts/accounts.proto", fileDescriptor_5da251b36fd5e693) }
 
 var fileDescriptor_5da251b36fd5e693 = []byte{
-	// 829 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x55, 0xeb, 0x6e, 0xe2, 0x46,
-	0x14, 0xae, 0x8d, 0x09, 0x70, 0xdc, 0x70, 0x19, 0x48, 0xd6, 0xb5, 0x9a, 0x0d, 0xa5, 0xaa, 0x8a,
-	0xb6, 0x5a, 0x23, 0xb1, 0xbd, 0xa8, 0x52, 0x55, 0x89, 0x82, 0xd3, 0x45, 0x4a, 0x37, 0xdb, 0x09,
-	0x6d, 0x7e, 0x22, 0x07, 0xcf, 0x52, 0x57, 0x60, 0xbb, 0x33, 0x66, 0x23, 0x1e, 0xa0, 0x6f, 0xd1,
-	0x5f, 0x7d, 0xc1, 0xaa, 0x6f, 0x50, 0x79, 0x2e, 0xd8, 0x10, 0x88, 0x22, 0x45, 0xfd, 0x03, 0xf6,
-	0x39, 0xdf, 0xf9, 0xe6, 0xdc, 0xbe, 0x31, 0x3c, 0xf3, 0x66, 0xb3, 0x68, 0x15, 0x26, 0xac, 0xa7,
-	0x1e, 0x9c, 0x98, 0x46, 0x49, 0x84, 0xca, 0xea, 0xdd, 0x3e, 0x9f, 0x47, 0xd1, 0x7c, 0x41, 0x7a,
-	0xdc, 0x7e, 0xbb, 0x7a, 0xd7, 0x4b, 0x82, 0x25, 0x61, 0x89, 0xb7, 0x8c, 0x05, 0xd4, 0x6e, 0xac,
-	0x18, 0xa1, 0xac, 0xc7, 0x7f, 0xa5, 0xa9, 0x49, 0x28, 0x8d, 0x28, 0xeb, 0x89, 0x3f, 0x61, 0xec,
-	0xfc, 0xa3, 0x81, 0x39, 0xa1, 0x5e, 0xc8, 0xbc, 0x59, 0x12, 0x44, 0x21, 0xaa, 0x82, 0x1e, 0xf8,
-	0x96, 0xd6, 0xd6, 0xba, 0x15, 0xac, 0x07, 0x3e, 0x7a, 0x09, 0x46, 0xb2, 0x8e, 0x89, 0xa5, 0xb7,
-	0xb5, 0x6e, 0xb5, 0xff, 0x91, 0xb3, 0xc9, 0x28, 0x17, 0x34, 0x59, 0xc7, 0x04, 0x73, 0x18, 0xfa,
-	0x0c, 0xaa, 0x2c, 0x5a, 0xd1, 0x19, 0x99, 0x4a, 0xa0, 0x55, 0xe0, 0x54, 0xc7, 0xc2, 0x3a, 0x10,
-	0x46, 0xf4, 0x39, 0xd4, 0x7c, 0xc2, 0x92, 0x20, 0x5c, 0x6f, 0x70, 0x06, 0xc7, 0x55, 0xa5, 0x59,
-	0x01, 0x4f, 0xe1, 0xc8, 0x5b, 0x72, 0x7f, 0xb1, 0xad, 0x75, 0x75, 0x2c, 0xdf, 0xd0, 0xb7, 0x00,
-	0x33, 0x4a, 0xbc, 0x84, 0xf8, 0x53, 0x2f, 0xb1, 0x6a, 0x6d, 0xad, 0x6b, 0xf6, 0x6d, 0x47, 0x34,
-	0xc5, 0x51, 0x4d, 0x71, 0x26, 0xaa, 0x29, 0xb8, 0x22, 0xd1, 0x83, 0xa4, 0xf3, 0xaf, 0x06, 0x25,
-	0x45, 0xbf, 0x5b, 0xad, 0x0d, 0xe5, 0xd8, 0x63, 0xec, 0x2e, 0xa2, 0x3e, 0xaf, 0xb8, 0x82, 0x37,
-	0xef, 0xe8, 0x13, 0x28, 0x46, 0x77, 0x21, 0xa1, 0xbc, 0x22, 0xb3, 0x6f, 0x3a, 0xa2, 0xb7, 0xbf,
-	0x30, 0x42, 0xb1, 0xf0, 0x20, 0x0b, 0x4a, 0xb7, 0xde, 0xc2, 0x0b, 0x67, 0x84, 0x97, 0xa3, 0x63,
-	0xf5, 0x8a, 0x7e, 0x80, 0xc6, 0xc2, 0x63, 0xc9, 0x34, 0xc9, 0xba, 0xc6, 0xac, 0x62, 0xbb, 0xd0,
-	0x35, 0xfb, 0x27, 0x7b, 0x7b, 0x8a, 0xeb, 0x29, 0x3e, 0x67, 0x60, 0x4f, 0xa9, 0xf9, 0x4b, 0x38,
-	0x76, 0xd3, 0xa9, 0x63, 0xc2, 0xe2, 0x28, 0x64, 0x04, 0x7d, 0x0a, 0x45, 0xbe, 0x06, 0xbc, 0x76,
-	0xb3, 0x7f, 0xec, 0xc8, 0xa5, 0x10, 0x28, 0xe1, 0xeb, 0x7c, 0x03, 0xad, 0x21, 0xa7, 0x90, 0xed,
-	0xc2, 0xe4, 0x8f, 0x15, 0x61, 0x09, 0x3a, 0x07, 0x23, 0xad, 0x9d, 0x77, 0x68, 0xa7, 0x11, 0xdc,
-	0xd1, 0x09, 0xe0, 0x64, 0x27, 0x50, 0x1e, 0xfb, 0x05, 0x94, 0xd4, 0xbc, 0xc5, 0xc1, 0x8d, 0xac,
-	0x78, 0x85, 0x55, 0x88, 0x2c, 0x47, 0xfd, 0x81, 0x1c, 0xbf, 0x82, 0xd6, 0x88, 0x2c, 0xc8, 0xbd,
-	0x1c, 0xcf, 0x00, 0x24, 0xcf, 0x34, 0x50, 0xb3, 0xac, 0x48, 0xcb, 0xd8, 0xef, 0xfc, 0x08, 0xd5,
-	0x11, 0x89, 0x23, 0x16, 0x3c, 0x32, 0x20, 0xb7, 0x88, 0x85, 0xfc, 0x22, 0x76, 0x5e, 0x43, 0xed,
-	0x26, 0x48, 0x7e, 0xf3, 0xa9, 0x77, 0xf7, 0x44, 0xa6, 0x3f, 0x35, 0xa8, 0xf1, 0x79, 0xbf, 0x23,
-	0x54, 0x51, 0xbd, 0x80, 0xc6, 0xb6, 0x9c, 0x32, 0xc6, 0xda, 0x96, 0xa2, 0xc6, 0x3e, 0x72, 0xa0,
-	0xe9, 0x93, 0x45, 0xf0, 0x9e, 0xd0, 0x75, 0x1e, 0x2d, 0xf4, 0xd7, 0x50, 0xae, 0xc1, 0x9e, 0x3c,
-	0x8c, 0xad, 0x3c, 0x46, 0x60, 0x5e, 0x46, 0x5e, 0xf8, 0xe4, 0xbe, 0x34, 0x2f, 0x03, 0x96, 0xc8,
-	0xe3, 0x98, 0x62, 0x43, 0x60, 0xc4, 0xde, 0x9c, 0xf0, 0xe9, 0x17, 0x31, 0x7f, 0x4e, 0x4f, 0x48,
-	0xff, 0xa7, 0x62, 0x2f, 0x74, 0xee, 0xa9, 0xa4, 0x96, 0x21, 0x67, 0xfa, 0x1d, 0x5a, 0xdb, 0x4c,
-	0x72, 0x97, 0x5e, 0xc2, 0xe6, 0x3a, 0xb4, 0x34, 0xae, 0xa4, 0x3d, 0xcb, 0xb4, 0x81, 0x3c, 0x6e,
-	0x9b, 0x5e, 0x01, 0xba, 0x08, 0x42, 0xff, 0xc1, 0x5d, 0xd2, 0x76, 0x77, 0x69, 0x0e, 0xcd, 0xad,
-	0xa0, 0xff, 0x6b, 0xd7, 0x5f, 0x10, 0xb9, 0x20, 0xd9, 0xad, 0x8b, 0x4c, 0x28, 0x8d, 0xdc, 0xb7,
-	0x57, 0xd7, 0xe3, 0x49, 0xfd, 0x03, 0xf4, 0x21, 0x94, 0x6f, 0xc6, 0x93, 0xd7, 0x23, 0x3c, 0xb8,
-	0xa9, 0x6b, 0xe8, 0x04, 0x1a, 0xd8, 0x1d, 0xba, 0xe3, 0x5f, 0xdd, 0xd1, 0x74, 0x82, 0x07, 0x6f,
-	0xae, 0x2f, 0x5c, 0x5c, 0xd7, 0xd1, 0x29, 0xa0, 0x8d, 0xf9, 0xad, 0x8b, 0x2f, 0xae, 0xf0, 0x4f,
-	0xee, 0xa8, 0x5e, 0x40, 0x65, 0x30, 0x2e, 0xaf, 0x06, 0x6f, 0xea, 0x46, 0xff, 0xaf, 0x02, 0x9c,
-	0xaa, 0x6e, 0x0f, 0xa3, 0xe5, 0xd2, 0x0b, 0xfd, 0x6b, 0x42, 0xdf, 0x07, 0x33, 0x82, 0xc6, 0x70,
-	0x24, 0x84, 0x8d, 0x9e, 0x67, 0xc5, 0xec, 0xbb, 0x23, 0xec, 0xf3, 0x83, 0x7e, 0xd9, 0x9e, 0x01,
-	0x1c, 0x09, 0xe1, 0xe6, 0xa9, 0xf6, 0x49, 0xd9, 0x7e, 0x96, 0xf9, 0xb7, 0x2f, 0xb1, 0xef, 0xa0,
-	0x24, 0x45, 0x8c, 0xac, 0x3c, 0x47, 0x5e, 0xd7, 0x87, 0xa3, 0xbf, 0x87, 0xb2, 0x52, 0x2e, 0xca,
-	0x7d, 0xd7, 0x76, 0xd4, 0xfc, 0x60, 0xbc, 0x92, 0x2b, 0xda, 0xfd, 0x2e, 0x66, 0x12, 0x3e, 0x1c,
-	0xff, 0x35, 0x18, 0xa9, 0xce, 0x50, 0xee, 0xfe, 0xcf, 0xe9, 0xee, 0x60, 0x5c, 0xff, 0x6f, 0x0d,
-	0x5a, 0x6a, 0x3c, 0x3f, 0xaf, 0x08, 0x5d, 0xab, 0xe1, 0xb8, 0x60, 0xa4, 0x42, 0x41, 0x67, 0x39,
-	0xc2, 0xfb, 0x12, 0xb4, 0x9f, 0x1f, 0x72, 0xcb, 0xbc, 0x86, 0x60, 0xa4, 0xeb, 0x8c, 0x3e, 0xce,
-	0x70, 0xf7, 0x35, 0x61, 0x9f, 0x1d, 0xf0, 0x0a, 0x92, 0xdb, 0x23, 0xfe, 0x3d, 0x7a, 0xf5, 0x5f,
-	0x00, 0x00, 0x00, 0xff, 0xff, 0x78, 0x60, 0x22, 0xec, 0xcb, 0x08, 0x00, 0x00,
+	// 783 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x55, 0x51, 0x6e, 0xda, 0x40,
+	0x10, 0xad, 0xc1, 0x09, 0x30, 0xa4, 0x60, 0x36, 0x40, 0x1c, 0xab, 0x49, 0x90, 0xa5, 0xaa, 0x28,
+	0x55, 0x88, 0x44, 0xd4, 0x8f, 0x4a, 0xfd, 0x21, 0xd8, 0x34, 0x48, 0x69, 0x92, 0x3a, 0xa8, 0x7c,
+	0x22, 0x07, 0x6f, 0x52, 0x4b, 0x60, 0xbb, 0x5e, 0x93, 0x88, 0x03, 0xf4, 0x22, 0x3d, 0x50, 0xef,
+	0xd0, 0x13, 0xf4, 0x0a, 0x15, 0xeb, 0x5d, 0xdb, 0x38, 0x4e, 0x55, 0x35, 0x5f, 0x78, 0x67, 0xde,
+	0xbe, 0x9d, 0x99, 0x7d, 0x6f, 0x81, 0x1d, 0x73, 0x3a, 0x75, 0x17, 0x4e, 0x40, 0x8e, 0xf9, 0x47,
+	0xc7, 0xf3, 0xdd, 0xc0, 0x45, 0x45, 0xbe, 0x56, 0x0e, 0xee, 0x5c, 0xf7, 0x6e, 0x86, 0x8f, 0x69,
+	0xfc, 0x66, 0x71, 0x7b, 0x1c, 0xd8, 0x73, 0x4c, 0x02, 0x73, 0xee, 0x85, 0x50, 0xf5, 0xb7, 0x00,
+	0xe5, 0x91, 0x6f, 0x3a, 0xc4, 0x9c, 0x06, 0xb6, 0xeb, 0xa0, 0x0a, 0xe4, 0x6c, 0x4b, 0x16, 0x5a,
+	0x42, 0xbb, 0x64, 0xe4, 0x6c, 0x0b, 0x1d, 0x81, 0x18, 0x2c, 0x3d, 0x2c, 0xe7, 0x5a, 0x42, 0xbb,
+	0xd2, 0xdd, 0xed, 0x44, 0x27, 0x25, 0x36, 0x8d, 0x96, 0x1e, 0x36, 0x28, 0x0c, 0xbd, 0x86, 0x0a,
+	0x71, 0x17, 0xfe, 0x14, 0x4f, 0x18, 0x50, 0xce, 0x53, 0xaa, 0x97, 0x61, 0xb4, 0x17, 0x06, 0xd1,
+	0x1b, 0xa8, 0x5a, 0x98, 0x04, 0xb6, 0xb3, 0x8c, 0x70, 0x22, 0xc5, 0x55, 0x58, 0x98, 0x03, 0x9b,
+	0xb0, 0x69, 0xce, 0x69, 0x7e, 0xa3, 0x25, 0xb4, 0x73, 0x06, 0x5b, 0xa1, 0xf7, 0x00, 0x53, 0x1f,
+	0x9b, 0x01, 0xb6, 0x26, 0x66, 0x20, 0x57, 0x5b, 0x42, 0xbb, 0xdc, 0x55, 0x3a, 0x61, 0xb3, 0x1d,
+	0xde, 0x6c, 0x67, 0xc4, 0x9b, 0x35, 0x4a, 0x0c, 0xdd, 0x0b, 0xd4, 0x9f, 0x02, 0x14, 0x38, 0x7d,
+	0xba, 0x5b, 0x05, 0x8a, 0x9e, 0x49, 0xc8, 0x83, 0xeb, 0x5b, 0xb4, 0xe3, 0x92, 0x11, 0xad, 0x91,
+	0x0c, 0x85, 0x1b, 0x73, 0x66, 0x3a, 0x53, 0x4c, 0x6b, 0xcd, 0x19, 0x7c, 0x89, 0x4e, 0xa1, 0x36,
+	0x33, 0x49, 0x30, 0x09, 0xe2, 0x91, 0x10, 0x79, 0xa3, 0x95, 0x6f, 0x97, 0xbb, 0x8d, 0xcc, 0x81,
+	0x19, 0xd2, 0x0a, 0x9f, 0x08, 0x90, 0xe7, 0x34, 0xd4, 0x84, 0x7a, 0x9f, 0x2e, 0x58, 0x57, 0x06,
+	0xfe, 0xb6, 0xc0, 0x24, 0x50, 0x35, 0x68, 0xa4, 0xe2, 0xc4, 0x73, 0x1d, 0x82, 0xd1, 0x5b, 0x28,
+	0xf0, 0xa9, 0x0b, 0xf4, 0xa0, 0x5a, 0x5c, 0x25, 0xc7, 0x72, 0x84, 0xfa, 0x0e, 0xea, 0x1a, 0x9e,
+	0xe1, 0x34, 0x3b, 0xda, 0x03, 0x60, 0x90, 0x89, 0xcd, 0x87, 0x55, 0x62, 0x91, 0xa1, 0xa5, 0xee,
+	0x40, 0x23, 0xb5, 0x2d, 0x3c, 0x5c, 0xfd, 0x08, 0x15, 0x0d, 0x7b, 0x2e, 0xb1, 0xff, 0x91, 0x29,
+	0x21, 0x81, 0x7c, 0x52, 0x02, 0x6a, 0x0d, 0xaa, 0x11, 0x11, 0xe3, 0x3e, 0x83, 0xea, 0xd8, 0x0e,
+	0xbe, 0x5a, 0xbe, 0xf9, 0xf0, 0x4c, 0x72, 0x04, 0x52, 0xcc, 0xc4, 0xd8, 0xbf, 0x0b, 0x50, 0xa5,
+	0x77, 0x76, 0x8b, 0x7d, 0x4e, 0x7f, 0x08, 0xb5, 0x75, 0xbd, 0xc7, 0xa7, 0x54, 0xd7, 0x24, 0x3f,
+	0xb4, 0x50, 0x07, 0xb6, 0x2d, 0x3c, 0xb3, 0xef, 0xb1, 0xbf, 0x4c, 0xa2, 0x43, 0x83, 0xd4, 0x78,
+	0xaa, 0x97, 0x51, 0x9b, 0xb8, 0x56, 0x9b, 0x04, 0x15, 0x5a, 0x06, 0x8e, 0x2a, 0xd3, 0xa0, 0x7c,
+	0xee, 0x9a, 0xce, 0x33, 0x7b, 0xae, 0xc0, 0x56, 0xc8, 0x12, 0x4d, 0x73, 0xfb, 0xdc, 0x26, 0x01,
+	0x2b, 0x88, 0x70, 0x76, 0x04, 0xa2, 0x67, 0xde, 0x61, 0x2a, 0x9d, 0x0d, 0x83, 0x7e, 0xaf, 0x4e,
+	0x5c, 0xfd, 0x4e, 0x42, 0x51, 0xe5, 0x68, 0xa6, 0xb4, 0x8a, 0xf4, 0x29, 0xb3, 0x0e, 0xf5, 0x75,
+	0x26, 0x26, 0xc4, 0x23, 0x88, 0x5e, 0x2a, 0x59, 0xa0, 0x7e, 0xc9, 0x50, 0x62, 0x04, 0x51, 0x4f,
+	0x00, 0x0d, 0x6c, 0xc7, 0xfa, 0xab, 0x10, 0x85, 0xb4, 0x10, 0x4f, 0x61, 0x7b, 0x6d, 0xd3, 0x7f,
+	0x78, 0xe0, 0x10, 0xb3, 0x8b, 0x8f, 0x9f, 0x3b, 0x54, 0x86, 0x82, 0xa6, 0x5f, 0x5d, 0x5e, 0x0f,
+	0x47, 0xd2, 0x0b, 0xb4, 0x05, 0xc5, 0xf1, 0x70, 0x74, 0xa6, 0x19, 0xbd, 0xb1, 0x24, 0xa0, 0x06,
+	0xd4, 0x0c, 0xbd, 0xaf, 0x0f, 0xbf, 0xe8, 0xda, 0x64, 0x64, 0xf4, 0x2e, 0xae, 0x07, 0xba, 0x21,
+	0xe5, 0x50, 0x13, 0x50, 0x14, 0xbe, 0xd2, 0x8d, 0xc1, 0xa5, 0xf1, 0x49, 0xd7, 0xa4, 0x3c, 0x2a,
+	0x82, 0x78, 0x7e, 0xd9, 0xbb, 0x90, 0xc4, 0xee, 0xaf, 0x3c, 0x34, 0xf9, 0x8c, 0xfa, 0xee, 0x7c,
+	0x6e, 0x3a, 0xd6, 0x35, 0xf6, 0xef, 0xed, 0x29, 0x46, 0xe3, 0x94, 0xc7, 0x59, 0x1a, 0xed, 0xc7,
+	0x55, 0x67, 0xbd, 0x01, 0xca, 0xc1, 0x93, 0x79, 0x36, 0x87, 0x71, 0xca, 0xde, 0x19, 0xc4, 0x59,
+	0xf6, 0x4f, 0x12, 0x67, 0xfa, 0x1c, 0xe9, 0x91, 0xcf, 0x39, 0xa5, 0x9c, 0xdc, 0x92, 0x7c, 0x01,
+	0x94, 0xdd, 0x8c, 0x0c, 0xa3, 0x49, 0x58, 0x9a, 0xf3, 0x24, 0xd0, 0x29, 0xb7, 0x2b, 0x4a, 0x56,
+	0x8a, 0x31, 0x0d, 0x62, 0xf7, 0x66, 0x30, 0xa5, 0x8c, 0xad, 0xc8, 0xa9, 0x54, 0x64, 0x36, 0xf4,
+	0x21, 0x34, 0x1b, 0xe7, 0x48, 0xbc, 0xf0, 0x09, 0x0f, 0x2a, 0xcd, 0x74, 0x38, 0xdc, 0xdd, 0xfd,
+	0x21, 0x40, 0x9d, 0xdf, 0xf1, 0xe7, 0x05, 0xf6, 0x97, 0xfc, 0x86, 0x75, 0x10, 0x57, 0x1e, 0x41,
+	0x7b, 0x89, 0x8d, 0x8f, 0xdd, 0xa7, 0xec, 0x3f, 0x95, 0x66, 0xd5, 0xf5, 0x41, 0x5c, 0xc9, 0x1d,
+	0xbd, 0x8a, 0x71, 0x8f, 0x3d, 0xa3, 0xec, 0x3d, 0x91, 0x0d, 0x49, 0x6e, 0x36, 0xe9, 0x1f, 0xce,
+	0xc9, 0x9f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x73, 0x47, 0xed, 0x7c, 0x61, 0x08, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -847,12 +923,12 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type AccountsCommandServiceClient interface {
-	Create(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountResponse, error)
-	Delete(ctx context.Context, in *DeleteAccountRequest, opts ...grpc.CallOption) (*ErrorResponse, error)
-	Deposit(ctx context.Context, in *DepositRequest, opts ...grpc.CallOption) (*ErrorResponse, error)
-	Withdraw(ctx context.Context, in *WithdrawRequest, opts ...grpc.CallOption) (*ErrorResponse, error)
-	Transfer(ctx context.Context, in *TransferRequest, opts ...grpc.CallOption) (*ErrorResponse, error)
-	Loan(ctx context.Context, in *LoanRequest, opts ...grpc.CallOption) (*ErrorResponse, error)
+	CreateAccountCommand(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountResponse, error)
+	DeleteAccountCommand(ctx context.Context, in *DeleteAccountRequest, opts ...grpc.CallOption) (*DeleteAccountResponse, error)
+	DepositCommand(ctx context.Context, in *DepositRequest, opts ...grpc.CallOption) (*DepositResponse, error)
+	WithdrawCommand(ctx context.Context, in *WithdrawRequest, opts ...grpc.CallOption) (*WithdrawResponse, error)
+	TransferCommand(ctx context.Context, in *TransferRequest, opts ...grpc.CallOption) (*TranseResponse, error)
+	LoanCommand(ctx context.Context, in *LoanRequest, opts ...grpc.CallOption) (*LoanResponse, error)
 }
 
 type accountsCommandServiceClient struct {
@@ -863,54 +939,54 @@ func NewAccountsCommandServiceClient(cc grpc.ClientConnInterface) AccountsComman
 	return &accountsCommandServiceClient{cc}
 }
 
-func (c *accountsCommandServiceClient) Create(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountResponse, error) {
+func (c *accountsCommandServiceClient) CreateAccountCommand(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountResponse, error) {
 	out := new(CreateAccountResponse)
-	err := c.cc.Invoke(ctx, "/accounts.AccountsCommandService/Create", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/accounts.AccountsCommandService/CreateAccountCommand", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *accountsCommandServiceClient) Delete(ctx context.Context, in *DeleteAccountRequest, opts ...grpc.CallOption) (*ErrorResponse, error) {
-	out := new(ErrorResponse)
-	err := c.cc.Invoke(ctx, "/accounts.AccountsCommandService/Delete", in, out, opts...)
+func (c *accountsCommandServiceClient) DeleteAccountCommand(ctx context.Context, in *DeleteAccountRequest, opts ...grpc.CallOption) (*DeleteAccountResponse, error) {
+	out := new(DeleteAccountResponse)
+	err := c.cc.Invoke(ctx, "/accounts.AccountsCommandService/DeleteAccountCommand", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *accountsCommandServiceClient) Deposit(ctx context.Context, in *DepositRequest, opts ...grpc.CallOption) (*ErrorResponse, error) {
-	out := new(ErrorResponse)
-	err := c.cc.Invoke(ctx, "/accounts.AccountsCommandService/Deposit", in, out, opts...)
+func (c *accountsCommandServiceClient) DepositCommand(ctx context.Context, in *DepositRequest, opts ...grpc.CallOption) (*DepositResponse, error) {
+	out := new(DepositResponse)
+	err := c.cc.Invoke(ctx, "/accounts.AccountsCommandService/DepositCommand", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *accountsCommandServiceClient) Withdraw(ctx context.Context, in *WithdrawRequest, opts ...grpc.CallOption) (*ErrorResponse, error) {
-	out := new(ErrorResponse)
-	err := c.cc.Invoke(ctx, "/accounts.AccountsCommandService/Withdraw", in, out, opts...)
+func (c *accountsCommandServiceClient) WithdrawCommand(ctx context.Context, in *WithdrawRequest, opts ...grpc.CallOption) (*WithdrawResponse, error) {
+	out := new(WithdrawResponse)
+	err := c.cc.Invoke(ctx, "/accounts.AccountsCommandService/WithdrawCommand", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *accountsCommandServiceClient) Transfer(ctx context.Context, in *TransferRequest, opts ...grpc.CallOption) (*ErrorResponse, error) {
-	out := new(ErrorResponse)
-	err := c.cc.Invoke(ctx, "/accounts.AccountsCommandService/Transfer", in, out, opts...)
+func (c *accountsCommandServiceClient) TransferCommand(ctx context.Context, in *TransferRequest, opts ...grpc.CallOption) (*TranseResponse, error) {
+	out := new(TranseResponse)
+	err := c.cc.Invoke(ctx, "/accounts.AccountsCommandService/TransferCommand", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *accountsCommandServiceClient) Loan(ctx context.Context, in *LoanRequest, opts ...grpc.CallOption) (*ErrorResponse, error) {
-	out := new(ErrorResponse)
-	err := c.cc.Invoke(ctx, "/accounts.AccountsCommandService/Loan", in, out, opts...)
+func (c *accountsCommandServiceClient) LoanCommand(ctx context.Context, in *LoanRequest, opts ...grpc.CallOption) (*LoanResponse, error) {
+	out := new(LoanResponse)
+	err := c.cc.Invoke(ctx, "/accounts.AccountsCommandService/LoanCommand", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -919,145 +995,145 @@ func (c *accountsCommandServiceClient) Loan(ctx context.Context, in *LoanRequest
 
 // AccountsCommandServiceServer is the server API for AccountsCommandService service.
 type AccountsCommandServiceServer interface {
-	Create(context.Context, *CreateAccountRequest) (*CreateAccountResponse, error)
-	Delete(context.Context, *DeleteAccountRequest) (*ErrorResponse, error)
-	Deposit(context.Context, *DepositRequest) (*ErrorResponse, error)
-	Withdraw(context.Context, *WithdrawRequest) (*ErrorResponse, error)
-	Transfer(context.Context, *TransferRequest) (*ErrorResponse, error)
-	Loan(context.Context, *LoanRequest) (*ErrorResponse, error)
+	CreateAccountCommand(context.Context, *CreateAccountRequest) (*CreateAccountResponse, error)
+	DeleteAccountCommand(context.Context, *DeleteAccountRequest) (*DeleteAccountResponse, error)
+	DepositCommand(context.Context, *DepositRequest) (*DepositResponse, error)
+	WithdrawCommand(context.Context, *WithdrawRequest) (*WithdrawResponse, error)
+	TransferCommand(context.Context, *TransferRequest) (*TranseResponse, error)
+	LoanCommand(context.Context, *LoanRequest) (*LoanResponse, error)
 }
 
 // UnimplementedAccountsCommandServiceServer can be embedded to have forward compatible implementations.
 type UnimplementedAccountsCommandServiceServer struct {
 }
 
-func (*UnimplementedAccountsCommandServiceServer) Create(ctx context.Context, req *CreateAccountRequest) (*CreateAccountResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
+func (*UnimplementedAccountsCommandServiceServer) CreateAccountCommand(ctx context.Context, req *CreateAccountRequest) (*CreateAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateAccountCommand not implemented")
 }
-func (*UnimplementedAccountsCommandServiceServer) Delete(ctx context.Context, req *DeleteAccountRequest) (*ErrorResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
+func (*UnimplementedAccountsCommandServiceServer) DeleteAccountCommand(ctx context.Context, req *DeleteAccountRequest) (*DeleteAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteAccountCommand not implemented")
 }
-func (*UnimplementedAccountsCommandServiceServer) Deposit(ctx context.Context, req *DepositRequest) (*ErrorResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Deposit not implemented")
+func (*UnimplementedAccountsCommandServiceServer) DepositCommand(ctx context.Context, req *DepositRequest) (*DepositResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DepositCommand not implemented")
 }
-func (*UnimplementedAccountsCommandServiceServer) Withdraw(ctx context.Context, req *WithdrawRequest) (*ErrorResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Withdraw not implemented")
+func (*UnimplementedAccountsCommandServiceServer) WithdrawCommand(ctx context.Context, req *WithdrawRequest) (*WithdrawResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method WithdrawCommand not implemented")
 }
-func (*UnimplementedAccountsCommandServiceServer) Transfer(ctx context.Context, req *TransferRequest) (*ErrorResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Transfer not implemented")
+func (*UnimplementedAccountsCommandServiceServer) TransferCommand(ctx context.Context, req *TransferRequest) (*TranseResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TransferCommand not implemented")
 }
-func (*UnimplementedAccountsCommandServiceServer) Loan(ctx context.Context, req *LoanRequest) (*ErrorResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Loan not implemented")
+func (*UnimplementedAccountsCommandServiceServer) LoanCommand(ctx context.Context, req *LoanRequest) (*LoanResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LoanCommand not implemented")
 }
 
 func RegisterAccountsCommandServiceServer(s *grpc.Server, srv AccountsCommandServiceServer) {
 	s.RegisterService(&_AccountsCommandService_serviceDesc, srv)
 }
 
-func _AccountsCommandService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AccountsCommandService_CreateAccountCommand_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateAccountRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AccountsCommandServiceServer).Create(ctx, in)
+		return srv.(AccountsCommandServiceServer).CreateAccountCommand(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/accounts.AccountsCommandService/Create",
+		FullMethod: "/accounts.AccountsCommandService/CreateAccountCommand",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccountsCommandServiceServer).Create(ctx, req.(*CreateAccountRequest))
+		return srv.(AccountsCommandServiceServer).CreateAccountCommand(ctx, req.(*CreateAccountRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AccountsCommandService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AccountsCommandService_DeleteAccountCommand_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteAccountRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AccountsCommandServiceServer).Delete(ctx, in)
+		return srv.(AccountsCommandServiceServer).DeleteAccountCommand(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/accounts.AccountsCommandService/Delete",
+		FullMethod: "/accounts.AccountsCommandService/DeleteAccountCommand",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccountsCommandServiceServer).Delete(ctx, req.(*DeleteAccountRequest))
+		return srv.(AccountsCommandServiceServer).DeleteAccountCommand(ctx, req.(*DeleteAccountRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AccountsCommandService_Deposit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AccountsCommandService_DepositCommand_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DepositRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AccountsCommandServiceServer).Deposit(ctx, in)
+		return srv.(AccountsCommandServiceServer).DepositCommand(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/accounts.AccountsCommandService/Deposit",
+		FullMethod: "/accounts.AccountsCommandService/DepositCommand",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccountsCommandServiceServer).Deposit(ctx, req.(*DepositRequest))
+		return srv.(AccountsCommandServiceServer).DepositCommand(ctx, req.(*DepositRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AccountsCommandService_Withdraw_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AccountsCommandService_WithdrawCommand_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(WithdrawRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AccountsCommandServiceServer).Withdraw(ctx, in)
+		return srv.(AccountsCommandServiceServer).WithdrawCommand(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/accounts.AccountsCommandService/Withdraw",
+		FullMethod: "/accounts.AccountsCommandService/WithdrawCommand",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccountsCommandServiceServer).Withdraw(ctx, req.(*WithdrawRequest))
+		return srv.(AccountsCommandServiceServer).WithdrawCommand(ctx, req.(*WithdrawRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AccountsCommandService_Transfer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AccountsCommandService_TransferCommand_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(TransferRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AccountsCommandServiceServer).Transfer(ctx, in)
+		return srv.(AccountsCommandServiceServer).TransferCommand(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/accounts.AccountsCommandService/Transfer",
+		FullMethod: "/accounts.AccountsCommandService/TransferCommand",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccountsCommandServiceServer).Transfer(ctx, req.(*TransferRequest))
+		return srv.(AccountsCommandServiceServer).TransferCommand(ctx, req.(*TransferRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AccountsCommandService_Loan_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AccountsCommandService_LoanCommand_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LoanRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AccountsCommandServiceServer).Loan(ctx, in)
+		return srv.(AccountsCommandServiceServer).LoanCommand(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/accounts.AccountsCommandService/Loan",
+		FullMethod: "/accounts.AccountsCommandService/LoanCommand",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccountsCommandServiceServer).Loan(ctx, req.(*LoanRequest))
+		return srv.(AccountsCommandServiceServer).LoanCommand(ctx, req.(*LoanRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1067,28 +1143,28 @@ var _AccountsCommandService_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*AccountsCommandServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Create",
-			Handler:    _AccountsCommandService_Create_Handler,
+			MethodName: "CreateAccountCommand",
+			Handler:    _AccountsCommandService_CreateAccountCommand_Handler,
 		},
 		{
-			MethodName: "Delete",
-			Handler:    _AccountsCommandService_Delete_Handler,
+			MethodName: "DeleteAccountCommand",
+			Handler:    _AccountsCommandService_DeleteAccountCommand_Handler,
 		},
 		{
-			MethodName: "Deposit",
-			Handler:    _AccountsCommandService_Deposit_Handler,
+			MethodName: "DepositCommand",
+			Handler:    _AccountsCommandService_DepositCommand_Handler,
 		},
 		{
-			MethodName: "Withdraw",
-			Handler:    _AccountsCommandService_Withdraw_Handler,
+			MethodName: "WithdrawCommand",
+			Handler:    _AccountsCommandService_WithdrawCommand_Handler,
 		},
 		{
-			MethodName: "Transfer",
-			Handler:    _AccountsCommandService_Transfer_Handler,
+			MethodName: "TransferCommand",
+			Handler:    _AccountsCommandService_TransferCommand_Handler,
 		},
 		{
-			MethodName: "Loan",
-			Handler:    _AccountsCommandService_Loan_Handler,
+			MethodName: "LoanCommand",
+			Handler:    _AccountsCommandService_LoanCommand_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

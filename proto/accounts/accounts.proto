@@ -3,8 +3,8 @@ package accounts;
 
 import "google/protobuf/timestamp.proto";
 
-import "users/users.proto";
-import "errors/errors.proto";
+// import "users/users.proto";
+// import "errors/errors.proto";
 
 enum TransactionType {
   DEPOSIT = 0;
@@ -27,28 +27,28 @@ message Transaction {
 message Account {
   string id = 1;
   string password = 2;
-  users.User owner = 3;
+  // users.User owner = 3;
   float balance = 4;
   repeated Transaction last_transactions = 5;
 
   google.protobuf.Timestamp created_at = 15;
 }
 
-message ErrorResponse {
-  errors.Error error = 1;
-}
-
 message CreateAccountRequest {
-  users.User user = 2;
+  // users.User user = 2;
 }
 
 message CreateAccountResponse {
   Account account = 1;
-  errors.Error error = 2;
+  // errors.Error error = 2;
 }
 
 message DeleteAccountRequest {
   string account_id = 2;
+}
+
+message DeleteAccountResponse {
+  // errors.Error error = 1;
 }
 
 message DepositRequest {
@@ -56,9 +56,17 @@ message DepositRequest {
   float amount = 3;
 }
 
+message DepositResponse {
+  // errors.Error error = 1;
+}
+
 message WithdrawRequest {
   string account_id = 2;
   float amount = 3;
+}
+
+message WithdrawResponse {
+  // errors.Error error = 1;
 }
 
 message TransferRequest {
@@ -67,18 +75,26 @@ message TransferRequest {
   float amount = 4;
 }
 
+message TranseResponse {
+  // errors.Error error = 1;
+}
+
 message LoanRequest {
   string account_id = 2;
   float amount = 3;
 }
 
+message LoanResponse {
+  // errors.Error error = 1;
+}
+
 service AccountsCommandService {
-  rpc Create (CreateAccountRequest) returns (CreateAccountResponse);
-  rpc Delete (DeleteAccountRequest) returns (ErrorResponse);
-  rpc Deposit (DepositRequest) returns (ErrorResponse);
-  rpc Withdraw (WithdrawRequest) returns (ErrorResponse);
-  rpc Transfer (TransferRequest) returns (ErrorResponse);
-  rpc Loan (LoanRequest) returns (ErrorResponse);
+  rpc CreateAccountCommand (CreateAccountRequest) returns (CreateAccountResponse);
+  rpc DeleteAccountCommand (DeleteAccountRequest) returns (DeleteAccountResponse);
+  rpc DepositCommand (DepositRequest) returns (DepositResponse);
+  rpc WithdrawCommand (WithdrawRequest) returns (WithdrawResponse);
+  rpc TransferCommand (TransferRequest) returns (TranseResponse);
+  rpc LoanCommand (LoanRequest) returns (LoanResponse);
 }
 
 message ListAccountsRequest {
@@ -88,7 +104,7 @@ message ListAccountsRequest {
 
 message ListAccountsResponse {
   repeated Account accounts = 1;
-  errors.Error error = 2;
+  // errors.Error error = 2;
 }
 
 message FindAccountRequest {
@@ -97,7 +113,7 @@ message FindAccountRequest {
 
 message FindAccountResponse {
   Account account = 1;
-  errors.Error error = 2;
+  // errors.Error error = 2;
 }
 
 service AccountsQueryService {
