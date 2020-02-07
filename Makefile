@@ -29,11 +29,17 @@ protofiles:
 	@ echo
 	@ protoc -I=proto --go_out=plugins=grpc:proto/impl proto/pb.proto
 
-commander:
+command-server:
 	@ echo
-	@ echo "Running commander..."
+	@ echo "Running command server..."
 	@ echo
-	@ go run ./cmd/commander
+	@ go run ./cmd/command/server
+
+query-subscriber:
+	@ echo
+	@ echo "Running query subscriber..."
+	@ echo
+	@ go run ./cmd/query/subscriber
 
 producer:
 	@ echo

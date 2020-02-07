@@ -30,4 +30,5 @@ type EventStreamPublisher interface {
 
 // EventStreamSubscriber ...
 type EventStreamSubscriber interface {
+	Subscribe(context.Context, EventStreamTopic) (<-chan []byte, *Error)
 }

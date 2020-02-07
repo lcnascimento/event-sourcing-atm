@@ -3,6 +3,31 @@ package proto;
 
 import "google/protobuf/timestamp.proto";
 
+enum EventType {
+  EVENT_TYPE_UNKNOWN = 0;
+  ACCOUNT_CREATED = 1;
+}
+
+message Event {
+  string id = 1;
+  EventType type = 2;
+  bytes Data = 3;
+
+  google.protobuf.Timestamp created_at = 15;
+}
+
+enum CommandType {
+  COMMAND_TYPE_UNKNOWN = 0;
+}
+
+message Command {
+  string id = 1;
+  CommandType type = 2;
+  bytes Data = 3;
+
+  google.protobuf.Timestamp created_at = 15;
+}
+
 enum ErrorKind {
   KIND_NOT_GIVEN = 0;
   BAD_REQUEST = 400;

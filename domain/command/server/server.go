@@ -4,9 +4,10 @@ import (
 	"context"
 	"net"
 
+	"github.com/golang/protobuf/proto"
+	"github.com/google/uuid"
 	"google.golang.org/grpc"
 
-	"github.com/golang/protobuf/proto"
 	pb "github.com/lcnascimento/event-sourcing-atm/proto/impl"
 
 	"github.com/lcnascimento/event-sourcing-atm/infra"
@@ -42,14 +43,16 @@ func (s Service) CreateAccountCommand(ctx context.Context, req *pb.CreateAccount
 		return &pb.CreateAccountResponse{Error: errors.ToProtoError(err)}, errors.New(opName, err)
 	}
 
-	accEncoded, err := proto.Marshal(&pb.Account{
-		Id:       "123",
-		Password: "321",
-		Owner: &pb.User{
-			Id:    "789",
-			Name:  "Luís Nascimento",
-			Cpf:   "123.456.789-10",
-			Email: "contact@lcnascimento.me",
+	dataEncoded, err := proto.Marshal(&pb.AccountCreated{
+		Account: &pb.Account{
+			Id:       "123",
+			Password: "321",
+			Owner: &pb.User{
+				Id:    "789",
+				Name:  "Luís Nascimento",
+				Cpf:   "123.456.789-10",
+				Email: "contact@lcnascimento.me",
+			},
 		},
 	})
 	if err != nil {
@@ -58,7 +61,20 @@ func (s Service) CreateAccountCommand(ctx context.Context, req *pb.CreateAccount
 		}, errors.New(opName, err)
 	}
 
-	if err := s.in.Stream.Publish(ctx, "accounts", accEncoded); err != nil {
+	id, _ := uuid.NewRandom()
+
+	event, err := proto.Marshal(&pb.Event{
+		Id:   id.String(),
+		Type: pb.EventType_ACCOUNT_CREATED,
+		Data: dataEncoded,
+	})
+	if err != nil {
+		return &pb.CreateAccountResponse{
+			Error: errors.ToProtoError(errors.New(ctx, opName, err)),
+		}, errors.New(opName, err)
+	}
+
+	if err := s.in.Stream.Publish(ctx, "accounts", event); err != nil {
 		return &pb.CreateAccountResponse{Error: errors.ToProtoError(err)}, errors.New(opName, err)
 	}
 

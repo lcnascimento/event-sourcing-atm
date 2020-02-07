@@ -20,10 +20,10 @@ func main() {
 
 	log := log.NewClient(log.ClientInput{
 		Level: "Info",
-		GoEnv: "development",
+		GoEnv: "test",
 	})
 
-	kafka, err := kafka.NewService(kafka.ServiceInput{
+	kafka, err := kafka.NewProducerService(kafka.ServiceInput{
 		Log: log,
 		Hosts: []string{
 			"localhost:9092",
@@ -35,6 +35,7 @@ func main() {
 		errors.Log(log, err)
 		return
 	}
+	defer kafka.CloseConnection()
 
 	account, err := account.NewService(account.ServiceInput{
 		Log: log,

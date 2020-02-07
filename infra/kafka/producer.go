@@ -16,14 +16,14 @@ type ServiceInput struct {
 	Hosts []string
 }
 
-// Service ...
-type Service struct {
+// ProducerService ...
+type ProducerService struct {
 	in   ServiceInput
 	conn kafka.AsyncProducer
 }
 
-// NewService ...
-func NewService(in ServiceInput) (*Service, *infra.Error) {
+// NewProducerService ...
+func NewProducerService(in ServiceInput) (*ProducerService, *infra.Error) {
 	const opName infra.OpName = "kafka.NewService"
 
 	config := kafka.NewConfig()
@@ -40,11 +40,11 @@ func NewService(in ServiceInput) (*Service, *infra.Error) {
 		return nil, errors.New(opName, err)
 	}
 
-	return &Service{in: in, conn: conn}, nil
+	return &ProducerService{in: in, conn: conn}, nil
 }
 
 // Publish ...
-func (s Service) Publish(ctx context.Context, topic infra.EventStreamTopic, data []byte) *infra.Error {
+func (s ProducerService) Publish(ctx context.Context, topic infra.EventStreamTopic, data []byte) *infra.Error {
 	const opName infra.OpName = "kafka.Publish"
 
 	msg := &kafka.ProducerMessage{
@@ -62,6 +62,6 @@ func (s Service) Publish(ctx context.Context, topic infra.EventStreamTopic, data
 }
 
 // CloseConnection ...
-func (s Service) CloseConnection() {
+func (s ProducerService) CloseConnection() {
 	s.conn.Close()
 }

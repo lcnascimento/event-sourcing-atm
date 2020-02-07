@@ -6,6 +6,8 @@ import (
 
 // ServiceInput ...
 type ServiceInput struct {
+	Log    infra.LogProvider
+	Stream infra.EventStreamSubscriber
 }
 
 // Service ...
