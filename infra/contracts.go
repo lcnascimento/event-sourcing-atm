@@ -32,3 +32,13 @@ type EventStreamPublisher interface {
 type EventStreamSubscriber interface {
 	Subscribe(context.Context, EventStreamTopic) (<-chan []byte, *Error)
 }
+
+// DatabaseQuery ...
+type DatabaseQuery interface {
+	ToSQL() string
+}
+
+// DatabaseProvider ...
+type DatabaseProvider interface {
+	Insert(context.Context, DatabaseQuery) *Error
+}

@@ -4,6 +4,7 @@ go 1.12
 
 require (
 	github.com/Shopify/sarama v1.26.0
+	github.com/gocql/gocql v0.0.0-20200203083758-81b8263d9fe5
 	github.com/golang/protobuf v1.3.3
 	github.com/google/uuid v1.1.1
 	golang.org/x/lint v0.0.0-20190313153728-d0100b6bd8b3 // indirect

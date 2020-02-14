@@ -60,3 +60,10 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker3:29094,PLAINTEXT_HOST://localhost:9094
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+
+  cassandra1:
+    image: cassandra
+    container_name: cassandra1
+    ports:
+      - "7001:7000"
+      - "9043:9042"
