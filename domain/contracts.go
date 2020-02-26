@@ -9,18 +9,12 @@ import (
 // Aggregate ...
 type Aggregate interface {
 	Name() string
-	Apply(context.Context, Event) (Aggregate, *infra.Error)
+	Apply(context.Context, infra.Event) (Aggregate, *infra.Error)
 }
 
 // EventHandlerProvider ...
 type EventHandlerProvider interface {
-	Project(context.Context, Aggregate, []Event) (Aggregate, *infra.Error)
-}
-
-// EventStoreProvider ...
-type EventStoreProvider interface {
-	Insert(context.Context, Event) *infra.Error
-	List(context.Context, *EventRowIDPattern, *AggregateID) ([]*Event, *infra.Error)
+	Project(context.Context, Aggregate, []infra.Event) (Aggregate, *infra.Error)
 }
 
 // Executable ...

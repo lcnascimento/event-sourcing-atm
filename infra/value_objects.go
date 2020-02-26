@@ -125,3 +125,18 @@ const (
 
 // EventStreamTopic ...
 type EventStreamTopic string
+
+// EventName ...
+type EventName string
+
+// EventRowID ...
+type EventRowID string
+
+// AggregateID ...
+type AggregateID string
+
+// ListEventsInput ...
+type ListEventsInput struct {
+	RowID       *EventRowID
+	AggregateID *AggregateID
+}

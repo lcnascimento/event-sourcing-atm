@@ -1,24 +1,19 @@
 package domain
 
-import "errors"
+import (
+	"errors"
+
+	"github.com/lcnascimento/event-sourcing-atm/infra"
+)
 
 var (
 	// ErrApplyEventIntoAggregate ...
 	ErrApplyEventIntoAggregate error = errors.New("could not apply event into aggregate")
 )
 
-// EventName ...
-type EventName string
-
-// EventRowIDPattern ...
-type EventRowIDPattern string
-
-// AggregateID ...
-type AggregateID string
-
 const (
 	// AccountCreatedEvent ...
-	AccountCreatedEvent EventName = "AccountCreated"
+	AccountCreatedEvent infra.EventName = "AccountCreated"
 )
 
 // AccountCreatedPayload ...

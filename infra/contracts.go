@@ -33,12 +33,8 @@ type EventStreamSubscriber interface {
 	Subscribe(context.Context, EventStreamTopic) (<-chan []byte, *Error)
 }
 
-// DatabaseQuery ...
-type DatabaseQuery interface {
-	ToSQL() string
-}
-
-// DatabaseProvider ...
-type DatabaseProvider interface {
-	Insert(context.Context, DatabaseQuery) *Error
+// EventStoreProvider ...
+type EventStoreProvider interface {
+	Insert(context.Context, Event) *Error
+	List(context.Context, *ListEventsInput) ([]*Event, *Error)
 }
