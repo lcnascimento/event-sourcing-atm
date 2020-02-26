@@ -10,7 +10,8 @@ import (
 
 // ServiceInput ...
 type ServiceInput struct {
-	Log infra.LogProvider
+	Log        infra.LogProvider
+	EventStore domain.EventStoreProvider
 }
 
 // Service ...
@@ -27,9 +28,12 @@ func NewService(in ServiceInput) (*Service, *infra.Error) {
 func (s Service) Insert(ctx context.Context, acc domain.Account) *infra.Error {
 	const opName infra.OpName = "command.account.Insert"
 
-	s.in.Log.InfoCustomData(ctx, opName, "Inserting new account", infra.CustomData{
-		"account": acc,
+	s.in.EventStore.Insert(ctx, domain.Event{
+		RowID:   infra.ObjectID("userid:AccountAggregate"),
+		Type:    domain.AccountCreatedEvent,
+		Payload: domain.AccountCreatedPayload{},
 	})
+
 	return nil
 }
 

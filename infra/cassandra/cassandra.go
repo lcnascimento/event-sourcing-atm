@@ -30,11 +30,6 @@ func NewClient(in ClientInput) (*Client, *infra.Error) {
 	cluster.Consistency = cql.Quorum
 	cluster.ProtoVersion = 3
 
-	in.Log.InfoCustomData(context.Background(), opName, "vish", infra.CustomData{
-		"hosts":    in.Hosts,
-		"keyspace": in.Keyspace,
-	})
-
 	sess, err := cluster.CreateSession()
 	if err != nil {
 		return nil, errors.New(opName, err)

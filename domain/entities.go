@@ -1,35 +1,40 @@
 package domain
 
 import (
-	"fmt"
+	"context"
 	"time"
 
 	"github.com/lcnascimento/event-sourcing-atm/infra"
+	"github.com/lcnascimento/event-sourcing-atm/infra/errors"
 )
-
-// Account ...
-type Account struct {
-}
 
 // Event ...
 type Event struct {
 	RowID       infra.ObjectID
 	AggregateID infra.ObjectID
-	Timestamp   time.Time
+	Timestamp   *time.Time
 	Payload     interface{}
+	Type        EventName
 }
 
-// ToSQL ...
-func (e Event) ToSQL() string {
-	return fmt.Sprintf(`
-		INSERT INTO events (row_id, aggregate_id, event_time)
-		VALUES ('%s', '%s', toTimestamp(NOW()))
-	`, e.RowID, e.AggregateID)
+// Account ...
+type Account struct {
+	Number  int
+	Agency  int
+	Balance float64
 }
 
-// ListEventsQuery ...
-type ListEventsQuery struct {
-	RowID       infra.ObjectID
-	AggregateID infra.ObjectID
-	Timestamp   time.Time
+// Name ...
+func (Account) Name() string {
+	return "AccountAggregate"
+}
+
+// Apply ...
+func (a Account) Apply(ctx context.Context, e Event) (*Account, *infra.Error) {
+	const opName infra.OpName = "command.Account.Apply"
+
+	switch e.Type {
+	default:
+		return nil, errors.New(ctx, opName, ErrApplyEventIntoAggregate, infra.KindNotFound, infra.SeverityWarning)
+	}
 }
