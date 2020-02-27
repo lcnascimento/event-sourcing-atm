@@ -48,7 +48,7 @@ func (c Client) CloseSession() {
 }
 
 // Insert ...
-func (c Client) Insert(ctx context.Context, event infra.Event) *infra.Error {
+func (c Client) Insert(ctx context.Context, event infra.Event) (*infra.Event, *infra.Error) {
 	const opName infra.OpName = "cassandra.Insert"
 
 	if event.Timestamp == nil {
@@ -60,10 +60,10 @@ func (c Client) Insert(ctx context.Context, event infra.Event) *infra.Error {
 	query := gocqlx.Query(c.sess.Query(stmt), names).BindStruct(event)
 
 	if err := query.ExecRelease(); err != nil {
-		return errors.New(ctx, opName, err)
+		return nil, errors.New(ctx, opName, err)
 	}
 
-	return nil
+	return &event, nil
 }
 
 // List ...

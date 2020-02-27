@@ -14,7 +14,7 @@ import (
 	"github.com/lcnascimento/event-sourcing-atm/infra/errors"
 
 	"github.com/lcnascimento/event-sourcing-atm/domain"
-	command "github.com/lcnascimento/event-sourcing-atm/domain/command"
+	"github.com/lcnascimento/event-sourcing-atm/domain/command"
 )
 
 // ServiceInput ...

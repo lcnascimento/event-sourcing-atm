@@ -35,6 +35,6 @@ type EventStreamSubscriber interface {
 
 // EventStoreProvider ...
 type EventStoreProvider interface {
-	Insert(context.Context, Event) *Error
-	List(context.Context, *ListEventsInput) ([]*Event, *Error)
+	Insert(context.Context, Event) (*Event, *Error)
+	List(context.Context, ListEventsInput) ([]Event, *Error)
 }

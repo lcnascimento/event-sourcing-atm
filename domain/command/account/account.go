@@ -4,43 +4,53 @@ import (
 	"context"
 
 	"github.com/lcnascimento/event-sourcing-atm/infra"
+	"github.com/lcnascimento/event-sourcing-atm/infra/errors"
 
-	"github.com/lcnascimento/event-sourcing-atm/domain"
+	"github.com/lcnascimento/event-sourcing-atm/domain/command"
 )
 
 // ServiceInput ...
 type ServiceInput struct {
 	Log        infra.LogProvider
-	EventStore domain.EventStoreProvider
+	Repository command.AccountsRepository
 }
 
 // Service ...
 type Service struct {
-	in ServiceInput
+	in                ServiceInput
+	nextAccountNumber int // TODO: This must be changed in the future!
 }
 
 // NewService ...
 func NewService(in ServiceInput) (*Service, *infra.Error) {
-	return &Service{in: in}, nil
+	return &Service{in: in, nextAccountNumber: 1}, nil
 }
 
-// Insert ...
-func (s Service) Insert(ctx context.Context, acc domain.Account) *infra.Error {
-	const opName infra.OpName = "command.account.Insert"
+// Create ...
+func (s *Service) Create(ctx context.Context, user command.User) (*infra.Event, *infra.Error) {
+	const opName infra.OpName = "account.Create"
 
-	s.in.EventStore.Insert(ctx, domain.Event{
-		RowID:   infra.ObjectID("userid:AccountAggregate"),
-		Type:    domain.AccountCreatedEvent,
-		Payload: domain.AccountCreatedPayload{},
-	})
+	accounts, err := s.in.Repository.ListByCPF(ctx, user.CPF)
+	if err != nil {
+		return nil, errors.New(opName, err)
+	}
 
-	return nil
-}
+	if len(accounts) > 0 {
+		return nil, errors.New(ctx, opName, command.ErrAccountAlreadyExists, infra.KindBadRequest)
+	}
 
-// Remove ...
-func (s Service) Remove(ctx context.Context, accID infra.ObjectID) *infra.Error {
-	const opName infra.OpName = "command.account.Remove"
+	account := command.Account{
+		Agency:  1,
+		Balance: 0,
+		Number:  s.nextAccountNumber,
+		Owner:   user,
+	}
+	event, err := s.in.Repository.Insert(ctx, account)
+	if err != nil {
+		return nil, errors.New(opName, err)
+	}
 
-	s.in.Log.Infof(ctx, opName, "Removing account %s", accID)
-	return nil
+	s.nextAccountNumber++
+
+	return event, nil
 }

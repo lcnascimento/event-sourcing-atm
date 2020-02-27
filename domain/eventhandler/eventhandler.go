@@ -24,15 +24,15 @@ func NewService(in ServiceInput) (*Service, *infra.Error) {
 }
 
 // Project ...
-func (s Service) Project(ctx context.Context, agg domain.Aggregate, events []domain.Event) (domain.Aggregate, *infra.Error) {
+func (s Service) Project(ctx context.Context, state domain.Aggregate, events []infra.Event) (domain.Aggregate, *infra.Error) {
 	const opName infra.OpName = "eventhandler.Project"
 
 	for _, event := range events {
-		model, err := agg.Apply(ctx, event)
+		model, err := state.Apply(ctx, event)
 
 		if err == domain.ErrApplyEventIntoAggregate {
 			s.in.Log.WarningCustomData(ctx, opName, err.Error(), infra.CustomData{
-				"aggregate_name": agg.Name(),
+				"aggregate_name": state.Name(),
 				"event":          event,
 			})
 			continue
@@ -42,8 +42,8 @@ func (s Service) Project(ctx context.Context, agg domain.Aggregate, events []dom
 			return nil, errors.New(ctx, opName, err)
 		}
 
-		agg = model
+		state = model
 	}
 
-	return agg, nil
+	return state, nil
 }
