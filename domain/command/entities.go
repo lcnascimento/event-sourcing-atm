@@ -2,7 +2,6 @@ package command
 
 import (
 	"context"
-	"encoding/json"
 	"time"
 
 	"github.com/lcnascimento/event-sourcing-atm/domain"
@@ -39,14 +38,8 @@ func (a *Account) Apply(ctx context.Context, e infra.Event) *infra.Error {
 
 	switch e.Type {
 	case AccountCreatedEvent:
-		// TODO: Handle this logic during JSONUnmarshling of Event
-		b, err := json.Marshal(e.Payload.Data)
-		if err != nil {
-			return errors.New(ctx, opName, err)
-		}
-
 		payload := AccountCreatedPayload{}
-		if err := json.Unmarshal(b, &payload); err != nil {
+		if err := e.Payload.Cast(&payload); err != nil {
 			return errors.New(ctx, opName, err)
 		}
 
@@ -57,14 +50,8 @@ func (a *Account) Apply(ctx context.Context, e infra.Event) *infra.Error {
 
 		return nil
 	case MoneyCreditedIntoAccountEvent:
-		// TODO: Handle this logic during JSONUnmarshling of Event
-		b, err := json.Marshal(e.Payload.Data)
-		if err != nil {
-			return errors.New(ctx, opName, err)
-		}
-
 		payload := MoneyCreditedIntoAccountPayload{}
-		if err := json.Unmarshal(b, &payload); err != nil {
+		if err := e.Payload.Cast(&payload); err != nil {
 			return errors.New(ctx, opName, err)
 		}
 
@@ -72,14 +59,8 @@ func (a *Account) Apply(ctx context.Context, e infra.Event) *infra.Error {
 
 		return nil
 	case MoneyDebitedFromAccountEvent:
-		// TODO: Handle this logic during JSONUnmarshling of Event
-		b, err := json.Marshal(e.Payload.Data)
-		if err != nil {
-			return errors.New(ctx, opName, err)
-		}
-
 		payload := MoneyDebitedFromAccountPayload{}
-		if err := json.Unmarshal(b, &payload); err != nil {
+		if err := e.Payload.Cast(&payload); err != nil {
 			return errors.New(ctx, opName, err)
 		}
 

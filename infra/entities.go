@@ -12,6 +12,22 @@ type EventPayload struct {
 	Data interface{}
 }
 
+// Cast ...
+func (p EventPayload) Cast(out interface{}) error {
+	const opName OpName = "entity.Cast"
+
+	b, err := json.Marshal(p.Data)
+	if err != nil {
+		return err
+	}
+
+	if err := json.Unmarshal(b, out); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // MarshalCQL ...
 func (p EventPayload) MarshalCQL(info gocql.TypeInfo) ([]byte, error) {
 	return json.Marshal(p.Data)
